@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+
+    defaultConfig {
+        applicationId "cg.zack_oliver.gradle.builditbigger"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        free {
+            applicationId "cg.zack_oliver.gradle.builditbigger.free"
+            versionName "1.0-free"
+        }
+        paid {
+            applicationId "cg.zack_oliver.gradle.builditbigger.paid"
+            versionName "1.0-paid"
+        }
+    }
+    sourceSets {
+        free {
+            res.srcDirs = ['src/free/res', 'src/free/res/']
+            manifest.srcFile 'src/free/AndroidManifest.xml'
+        }
+        paid {
+            java.srcDirs = ['src/paid/java', 'src/paid/java/']
+            res.srcDirs = ['src/paid/res', 'src/paid/res/']
+            manifest.srcFile 'src/paid/AndroidManifest.xml'
+        }
+    }
+
+    lintOptions{
+        abortOnError false
+    }
+
+    testOptions {
+        unitTests.all {
+            // All the usual Gradle options.
+            jvmArgs '-XX:MaxPermSize=256m'
+        }
+        unitTests.returnDefaultValues = true
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
+    compile project(':zackjavajokes')
+    compile project(':zackandroiddisplayjokes')
+    compile project(path: ':backend', configuration: 'android-endpoints')
+    //for adMob
+    freeCompile 'com.google.android.gms:play-services-ads:11.0.4'
+    testCompile "org.mockito:mockito-core:1.9.5"
+
+
+}
